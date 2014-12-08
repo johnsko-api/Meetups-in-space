@@ -33,6 +33,20 @@ get '/' do
   erb :index
 end
 
+get '/meetups' do
+  @meetup = Meetup.all
+  #created an instance variable
+  #to call all the meetups
+  erb :meetup
+end
+
+get '/meetups/:id' do
+  @id = params[:id]
+  erb :info
+end
+
+
+
 get '/auth/github/callback' do
   auth = env['omniauth.auth']
 
