@@ -41,7 +41,7 @@ get '/meetups' do
 end
 
 get '/meetups/:id' do
-  @id = params[:id]
+  @id = Meetup.find_by_id(params[:id])
   erb :info
 end
 
