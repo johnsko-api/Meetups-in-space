@@ -1,3 +1,10 @@
 <ul>MeetUP NAME: <%=@id.title %></ul>
 <ul>MeetUP LOCATION: <%=@id.location%></ul>
 <ul>MeetUP DESCRIPTION: <%=@id.description%></ul>
+
+<% if signed_in? %>
+<ul><button type='submit'>Join: <%=@id.title%></button></ul>
+
+<% else %>
+<h3> You must sign in to join this meetup! </h3>
+<% end %>
