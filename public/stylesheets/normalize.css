@@ -423,3 +423,8 @@ td,
 th {
   padding: 0;
 }
+
+input,
+button {
+  color: black;
+}

@@ -33,6 +33,25 @@ get '/' do
   erb :index
 end
 
+get '/create_meetup' do
+  erb :create
+end
+
+post '/create_meetup' do
+    title = params["title"]
+    location = params["location"]
+    description = params["description"]
+    meetup = Meetup.new(title: title, location: location, description: description)
+  if meetup.save
+    flash[:notice] = "You have created a MeetUp in Space!! FLY AWAYY"
+    redirect "/meetups/#{meetup[:id]}"
+  else
+    flash[:notice] = "Please provide non-empty information in required fields"
+    redirect "/create_meetup"
+  end
+end
+
+
 get '/meetups' do
   @meetup = Meetup.all
   #created an instance variable
