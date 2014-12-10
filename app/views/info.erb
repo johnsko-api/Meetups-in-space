@@ -1,10 +1,29 @@
-<ul>MeetUP NAME: <%=@id.title %></ul>
-<ul>MeetUP LOCATION: <%=@id.location%></ul>
-<ul>MeetUP DESCRIPTION: <%=@id.description%></ul>
+<h2>MeetUP name:</h2>
+<ul><%= @meetup_id.title %></ul>
+
+<h2>MeetUP location:</h2>
+<ul><%= @meetup_id.location %></ul>
+
+<h2>MeetUP description:</h2>
+<ul><%= @meetup_id.description %></ul>
+
+<h4>people attending this MeetUP:</h4>
+
+<% @attendees.each do |attending| %>
+<img width="70px" height="70px" src="<%=attending.avatar_url%>"><br>
+<%= attending.username %></br>
+<% end %>
 
 <% if signed_in? %>
-<ul><button type='submit'>Join: <%=@id.title%></button></ul>
-
-<% else %>
-<h3> You must sign in to join this meetup! </h3>
-<% end %>
+<% if @find_user != [] %>
+<ul><form method='POST'>
+  <input type='hidden' name="leave">
+  <button type='submit'>Leave</button></ul>
+  <% elsif @find_user == []  %>
+  <ul><form method='POST'>
+    <input type='hidden' name="join">
+    <button type='submit'>Join</button></ul>
+    <% end %>
+    <% else %>
+    <h3> You must sign in to join this meetup! </h3>
+    <% end %>

@@ -7,6 +7,10 @@ require_relative 'config/application'
 
 Dir['app/**/*.rb'].each { |file| require_relative file }
 
+##############################
+########## Methods ###########
+##############################
+
 helpers do
   def current_user
     user_id = session[:user_id]
@@ -29,6 +33,9 @@ def authenticate!
   end
 end
 
+##############################
+########## Routes ############
+##############################
 get '/' do
   erb :index
 end
@@ -38,10 +45,10 @@ get '/create_meetup' do
 end
 
 post '/create_meetup' do
-    title = params["title"]
-    location = params["location"]
-    description = params["description"]
-    meetup = Meetup.new(title: title, location: location, description: description)
+  title = params["title"]
+  location = params["location"]
+  description = params["description"]
+  meetup = Meetup.new(title: title, location: location, description: description)
   if meetup.save
     flash[:notice] = "You have created a MeetUp in Space!! FLY AWAYY"
     redirect "/meetups/#{meetup[:id]}"
@@ -60,10 +67,30 @@ get '/meetups' do
 end
 
 get '/meetups/:id' do
-  @id = Meetup.find_by_id(params[:id])
+  @user_id = current_user[:id]
+  @meetup_id = Meetup.find_by_id(params[:id])
+  @attendees = @meetup_id.users
+  @find_user = Rsvp.where(user_id: @user_id, meetup_id: @meetup_id)
+  @lose_user = @find_user.first
   erb :info
 end
 
+post '/meetups/:id' do
+  @user_id = current_user[:id]
+  @meetup_id = params[:id]
+  @find_user = Rsvp.where(user_id: @user_id, meetup_id: @meetup_id)
+  lose_user = @find_user.first
+  join = params[:join]
+  leave = params[:leave]
+  if join
+    @rsvp = Rsvp.create(user_id: @user_id, meetup_id: @meetup_id)
+    flash[:notice] = "You have succesfully joined this meetUP! YAY!!"
+  elsif leave
+    lose_user.destroy
+    flash[:notice] = "You have left this meetUP! NO!!"
+  end
+  redirect "/meetups/#{@meetup_id}"
+end
 
 
 get '/auth/github/callback' do
